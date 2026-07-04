@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <style>
   :root{
     --charcoal:#1B1815;
@@ -441,6 +442,24 @@
     color:var(--graphite-dark);
   }
 
+  .footer-contact-links{
+    display:flex;
+    gap:24px;
+    align-items:center;
+  }
+  .footer-contact-link{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--oxblood-light);
+    text-decoration:none;
+    transition:color 0.3s ease;
+  }
+  .footer-contact-link:hover{
+    color:var(--cream);
+  }
+
   /* ---------- responsive ---------- */
   @media (max-width: 860px){
     .about-grid{ grid-template-columns:1fr; gap:42px; }
@@ -648,12 +667,72 @@
   <div class="reg-mark bl" style="color:rgba(237,230,216,0.25)"></div>
   <div class="reg-mark br" style="color:rgba(237,230,216,0.25)"></div>
   <div class="footer-inner">
-    <span class="footer-mark">Gautham Prasad</span>
-    <span class="footer-meta">Portfolio compiled 07 / 2026 — Kerala, India</span>
+    <span class="footer-mark" id="footer-name">Gautham Prasad</span>
+    <div id="footer-contact-links"></div>
+    <span class="footer-meta" id="footer-meta">Portfolio compiled 07 / 2026 — Kerala, India</span>
   </div>
 </footer>
 
 <script>
+  // Load YAML data
+  async function loadPortfolioData() {
+    try {
+      const response = await fetch('portfolio.yaml');
+      const yamlText = await response.text();
+      const data = jsyaml.load(yamlText);
+      renderPortfolioData(data);
+    } catch (error) {
+      console.error('Error loading portfolio.yaml:', error);
+    }
+  }
+
+  function renderPortfolioData(data) {
+    // Update footer name
+    const footerName = document.getElementById('footer-name');
+    if (footerName && data.profile) {
+      footerName.textContent = data.profile.name;
+    }
+
+    // Update footer meta
+    const footerMeta = document.getElementById('footer-meta');
+    if (footerMeta && data.profile && data.demographics) {
+      const now = new Date();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      footerMeta.textContent = `Portfolio compiled ${month} / ${year} — ${data.profile.location}`;
+    }
+
+    // Render contact and social links
+    const contactLinksContainer = document.getElementById('footer-contact-links');
+    if (contactLinksContainer && data.social) {
+      contactLinksContainer.className = 'footer-contact-links';
+      contactLinksContainer.innerHTML = '';
+      
+      data.social.forEach(social => {
+        const link = document.createElement('a');
+        link.href = social.url;
+        link.className = 'footer-contact-link';
+        link.textContent = social.platform;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        contactLinksContainer.appendChild(link);
+      });
+
+      // Add email if present
+      if (data.contact && data.contact.email) {
+        const emailLink = document.createElement('a');
+        emailLink.href = `mailto:${data.contact.email}`;
+        emailLink.className = 'footer-contact-link';
+        emailLink.textContent = 'Email';
+        contactLinksContainer.appendChild(emailLink);
+      }
+    }
+  }
+
+  // Load data on page load
+  document.addEventListener('DOMContentLoaded', loadPortfolioData);
+
+  // Existing reveal on scroll functionality
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {

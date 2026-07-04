@@ -1,0 +1,27 @@
+profile:
+  name: Gautham Prasad
+  role: Product Designer — Leather Goods
+  location: Kerala, India
+  tagline: Structurally Driven Accessories
+  quote: I specialize in structurally driven leather accessories — precise pattern-making, reverse-engineering complex forms, and bridging the gap between rigorous construction and refined aesthetics.
+
+contact:
+  email: gautham@example.com
+  phone: ""
+
+social:
+  - platform: LinkedIn
+    url: https://linkedin.com/in/gautham-prasad
+    label: LinkedIn
+  - platform: WhatsApp
+    url: https://wa.me/your-number
+    label: WhatsApp
+  - platform: Instagram
+    url: https://instagram.com/gautham
+    label: Instagram
+
+demographics:
+  established: 2026
+  specialization: Leather product design — pattern engineering for wallets, card holders, and structured small goods
+  approach: Reverse-engineering existing forms to understand load, fold, and stitch geometry before drafting an original pattern
+  focus: Compact carry systems — card capacity, cash organization, and closures — built to hold shape over years of use
